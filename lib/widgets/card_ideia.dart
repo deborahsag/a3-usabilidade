@@ -47,11 +47,11 @@ class CardIdeia extends StatelessWidget {
                       ideia.titulo,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.displayMedium,
+                      style: theme.textTheme.displaySmall,
                     ),
                   )
                 ),
-                Divider(),
+                const Divider(),
                 Text(
                   ideia.timestamp,
                   style: theme.textTheme.bodySmall,

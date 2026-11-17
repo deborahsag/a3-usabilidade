@@ -117,6 +117,14 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
     ideias = List<Ideia>.of(ideiasExemplo);
   }
 
+  void abrirCriarIdeia() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const CriarIdeia(),
+      ),
+    );
+  }
+
   void atualizarIdeia(Ideia ideiaAtualizada) {
     setState(() {
       ideias = ideias.map((ideia) {
@@ -126,8 +134,13 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
       }).toList();
     });
   }
-  
 
+  void excluirIdeia(String id) {
+    setState(() {
+      ideias.removeWhere((ideia) => ideia.id == id);
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -164,12 +177,13 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
       body: <Widget>[
 
         /// Página Inicial
-        PaginaInicial(),
+        PaginaInicial(onCriarIdeia: abrirCriarIdeia),
 
         /// Histórico de Ideias
         HistoricoIdeias(
           ideias: ideias,
           onIdeiaAtualizada: atualizarIdeia,
+          onIdeiaExcluida: excluirIdeia,
         ),
         
         /// Histórico de Projetos
@@ -193,6 +207,7 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
           ),
         ],
         onIdeiaAtualizada: atualizarIdeia,
+        onIdeiaExcluida: excluirIdeia,
       ),
       ][currentPageIndex],
     );

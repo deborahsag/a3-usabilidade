@@ -2,6 +2,18 @@ import 'package:material_ui/material_ui.dart';
 
 import 'package:a3_usabilidade/capsula.dart';
 
+class ResultadoRegistroIdeia {
+  const ResultadoRegistroIdeia.atualizada(this.ideia)
+    : excluida = false;
+
+  const ResultadoRegistroIdeia.excluida()
+    : ideia = null,
+      excluida = true;
+
+  final Ideia? ideia;
+  final bool excluida;
+}
+
 class RegistroIdeia extends StatefulWidget {
   const RegistroIdeia({
     super.key,
@@ -63,6 +75,113 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
     });
   }
 
+  Future<void> criarProjeto() async {
+    final theme = Theme.of(context);
+
+    final controller = TextEditingController();
+
+    final titulo = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Criar projeto'),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: const InputDecoration(
+              labelText: 'Título do projeto',
+              hintText: 'Digite o nome do projeto',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.onSurface,
+              ),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context, controller.text.trim());
+              },
+              child: const Text('Criar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    controller.dispose();
+
+    if (titulo == null || titulo.isEmpty || !mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
+              SizedBox(width: 10),
+              Text('Projeto criado com sucesso!'),
+            ],
+          ),
+          duration: Duration(seconds: 3),
+        ),
+    );
+  }
+
+  Future<void> excluirIdeia() async {
+    final theme = Theme.of(context);
+
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Excluir ideia?'),
+          content: const Text(
+            'Essa ação é definitiva. Tem certeza de que deseja excluir esta ideia?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.onSurface,
+              ),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.error,
+              ),
+              child: const Text('Excluir'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmar == true && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
+              SizedBox(width: 10),
+              Text('Ideia excluída com sucesso.'),
+            ],
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      
+      Navigator.pop(
+        context,
+        const ResultadoRegistroIdeia.excluida(),
+      );
+    }
+  }
+
   @override
   Widget build (BuildContext context) {
     final theme = Theme.of(context);
@@ -73,7 +192,10 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
         leading: BackButton(
           color: theme.colorScheme.tertiary,
           onPressed: () {
-            Navigator.pop(context, ideia);
+            Navigator.pop(
+              context,
+              ResultadoRegistroIdeia.atualizada(ideia),
+            );
           },
         ),
       ),
@@ -109,7 +231,7 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 50),
                       Card(
                         color: theme.colorScheme.surface,
                         margin: EdgeInsets.all(0),
@@ -118,14 +240,12 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                           child: Text(ideia.descricao),
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'Data de criação',
-                        style: theme.textTheme.titleMedium,
-                      ),
                       const SizedBox(height: 8),
-                      Text(ideia.timestamp),
-                      const SizedBox(height: 24),
+                      Text(
+                        ideia.timestamp,
+                        style: theme.textTheme.bodySmall
+                      ),
+                      const SizedBox(height: 50),
                       Row(
                         children: [
                           Icon(
@@ -163,6 +283,27 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                             }
                           ),
                         ]
+                      ),
+                      const SizedBox(height: 50),
+                      Center(
+                        child: Column(
+                          children: [
+                            FilledButton.icon(
+                              onPressed: criarProjeto,
+                              icon: const Icon(Icons.add),
+                              label: const Text('Criar projeto'),
+                            ),
+                            const SizedBox(height: 8),
+                            TextButton.icon(
+                              onPressed: excluirIdeia,
+                              icon: const Icon(Icons.delete_outline),
+                              label: const Text('Excluir ideia'),
+                              style: TextButton.styleFrom(
+                                foregroundColor: theme.colorScheme.error,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

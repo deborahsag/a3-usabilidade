@@ -7,10 +7,12 @@ class HistoricoIdeias extends StatelessWidget {
     super.key,
     required this.ideias,
     required this.onIdeiaAtualizada,
+    required this.onIdeiaExcluida,
   });
 
   final List<Ideia> ideias;
   final ValueChanged<Ideia> onIdeiaAtualizada;
+  final ValueChanged<String> onIdeiaExcluida;
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +21,21 @@ class HistoricoIdeias extends StatelessWidget {
         return CardIdeia(
           ideia: ideia,
           onTap: () async {
-            final ideiaAtualizada = await Navigator.of(context).push<Ideia>(
+            final resultado = await Navigator.of(context)
+                .push<ResultadoRegistroIdeia>(
               MaterialPageRoute(
                 builder: (context) => RegistroIdeia(ideia: ideia),
               ),
             );
 
-            if (ideiaAtualizada != null) {
-              onIdeiaAtualizada(ideiaAtualizada);
+            if (resultado == null) return;
+
+            if (resultado.excluida) {
+              onIdeiaExcluida(ideia.id);
+            } else if (resultado.ideia != null) {
+              onIdeiaAtualizada(resultado.ideia!);
             }
-          }
+          },
         );
       }).toList(),
     );
