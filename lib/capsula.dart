@@ -7,6 +7,7 @@ export 'screens/pagina_inicial.dart';
 export 'screens/registro_ideia.dart';
 export 'screens/registro_projeto.dart';
 export 'utils/notificacao_helper.dart';
+export 'utils/timestamp_helper.dart';
 export 'widgets/card_ideia.dart';
 export 'widgets/card_projeto.dart';
 export 'widgets/historico.dart';

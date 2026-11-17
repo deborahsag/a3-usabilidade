@@ -242,7 +242,7 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        ideia.timestamp,
+                        TimestampHelper.formatar(ideia.timestamp),
                         style: theme.textTheme.bodySmall
                       ),
                       const SizedBox(height: 50),

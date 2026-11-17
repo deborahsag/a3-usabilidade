@@ -53,7 +53,7 @@ class CardProjeto extends StatelessWidget {
                 ),
                 const Divider(),
                 Text(
-                  projeto.timestamp,
+                  TimestampHelper.formatar(projeto.timestamp),
                   style: theme.textTheme.bodySmall,
                 ),
               ],

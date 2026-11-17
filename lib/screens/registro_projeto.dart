@@ -187,7 +187,7 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        projeto.timestamp,
+                        TimestampHelper.formatar(projeto.timestamp),
                         style: theme.textTheme.bodySmall
                       ),
                       const SizedBox(height: 50),
