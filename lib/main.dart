@@ -3,7 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import 'package:a3_usabilidade/capsula.dart';
 
-import 'data/ideias_exemplo.dart';
+//import 'data/ideias_exemplo.dart';
 import 'data/projetos_exemplo.dart';
 
 void main() {
@@ -111,14 +111,74 @@ class LayoutPrincipal extends StatefulWidget {
 class _LayoutPrincipalState extends State<LayoutPrincipal> {
   int currentPageIndex = 0;
 
-  late List<Ideia> ideias;
+  List<Ideia> ideias = [];
   late List<Projeto> projetos;
+
+  bool carregandoIdeias = true;
+  String? erroIdeias;
 
   @override
   void initState() {
     super.initState();
-    ideias = List<Ideia>.of(ideiasExemplo);
+
+    _carregarIdeias();
+
     projetos = List<Projeto>.of(projetosExemplo);
+  }
+
+  Future<void> _carregarIdeias() async {
+    setState(() {
+      carregandoIdeias = true;
+      erroIdeias = null;
+    });
+
+    try {
+      final ideiasCarregadas = await IdeiaService.listarIdeias();
+
+      if (!mounted) return;
+
+      setState(() {
+        ideias = ideiasCarregadas;
+        carregandoIdeias = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        erroIdeias = e.toString();
+        carregandoIdeias = false;
+      });
+    }
+  }
+
+  Widget _construirHistoricoIdeias() {
+    if (carregandoIdeias) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (erroIdeias != null) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Não foi possível carregar as ideias.'),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: _carregarIdeias,
+              child: const Text('Tentar novamente'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return HistoricoIdeias(
+      ideias: ideias,
+      onIdeiaAtualizada: atualizarIdeia,
+      onIdeiaExcluida: excluirIdeia,
+    );
   }
 
   List<T> _atualizarRegistro<T>(
@@ -181,10 +241,31 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
     });
   }
 
-  void abrirCriarIdeia() {
-    Navigator.of(context).push(
+  Future<void> abrirCriarIdeia() async {
+    final theme = Theme.of(context);
+    
+    final novaIdeia = await Navigator.of(context).push<Ideia>(
       MaterialPageRoute(
         builder: (context) => const CriarIdeia(),
+      ),
+    );
+
+    if (novaIdeia == null || !mounted) return;
+
+    setState(() {
+      ideias.add(novaIdeia);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+            children: [
+              Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
+              SizedBox(width: 10),
+              Text('Projeto criado com sucesso!'),
+            ],
+          ),
+          duration: Duration(seconds: 3),
       ),
     );
   }
@@ -232,11 +313,7 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
         PaginaInicial(onCriarIdeia: abrirCriarIdeia),
 
         /// Histórico de Ideias
-        HistoricoIdeias(
-          ideias: ideias,
-          onIdeiaAtualizada: atualizarIdeia,
-          onIdeiaExcluida: excluirIdeia,
-        ),
+        _construirHistoricoIdeias(),
         
         /// Histórico de Projetos
         HistoricoProjetos(

@@ -9,6 +9,7 @@ final List<Ideia> ideiasExemplo = [
     notificacao: 3,
     timestamp: '2026-11-17T09:30:00-03:00',
     arquivada: false,
+    projetoId: null,
   ),
   Ideia(
     id: '2',
@@ -18,6 +19,7 @@ final List<Ideia> ideiasExemplo = [
     notificacao: 2,
     timestamp: '2026-11-16T14:15:00-03:00',
     arquivada: false,
+    projetoId: null,
   ),
   Ideia(
     id: '3',
@@ -26,6 +28,7 @@ final List<Ideia> ideiasExemplo = [
     notificacao: 1,
     timestamp: '2026-11-15T11:00:00-03:00',
     arquivada: false,
+    projetoId: null,
   ),
   Ideia(
     id: '4',
@@ -35,6 +38,7 @@ final List<Ideia> ideiasExemplo = [
     notificacao: 0,
     timestamp: '2026-11-14T16:45:00-03:00',
     arquivada: true,
+    projetoId: null,
   ),
   Ideia(
     id: '5',
@@ -44,5 +48,6 @@ final List<Ideia> ideiasExemplo = [
     notificacao: 2,
     timestamp: '2026-11-13T08:20:00-03:00',
     arquivada: false,
+    projetoId: null,
   ),
 ];

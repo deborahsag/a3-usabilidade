@@ -5,7 +5,8 @@ class Ideia {
     required this.descricao,
     required this.notificacao,
     required this.timestamp,
-    required this.arquivada
+    required this.arquivada,
+    required this.projetoId,
   });
 
   final String id;
@@ -14,6 +15,19 @@ class Ideia {
   final int notificacao;
   final String timestamp;
   final bool arquivada;
+  final String? projetoId;
+
+  factory Ideia.fromJson(Map<String, dynamic> json) {
+    return Ideia(
+      id: json['id'] as String,
+      titulo: json['titulo'] as String,
+      descricao: json['descricao'] as String,
+      notificacao: json['notificacao'] as int,
+      timestamp: json['timestamp'] as String,
+      arquivada: json['arquivada'] as bool,
+      projetoId: json['projetoId'] as String?,
+    );
+  }
 
   Ideia copyWith({
     String? titulo,
@@ -21,6 +35,7 @@ class Ideia {
     int? notificacao,
     String? timestamp,
     bool? arquivada,
+    String? projetoId,
   }) {
     return Ideia(
       id: id,
@@ -29,6 +44,7 @@ class Ideia {
       notificacao: notificacao ?? this.notificacao,
       timestamp: timestamp ?? this.timestamp,
       arquivada: arquivada ?? this.arquivada,
+      projetoId: projetoId ?? this.projetoId,
     );
   }
 }

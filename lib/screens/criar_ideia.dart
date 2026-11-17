@@ -15,6 +15,7 @@ class _CriarIdeiaState extends State<CriarIdeia> {
   final descricaoController = TextEditingController();
 
   int notificacao = 0;
+  bool salvando = false;
 
   @override
   void dispose() {
@@ -23,7 +24,7 @@ class _CriarIdeiaState extends State<CriarIdeia> {
     super.dispose();
   }
 
-  void salvarIdeia() {
+  Future<void> salvarIdeia() async {
     if (descricaoController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -33,30 +34,35 @@ class _CriarIdeiaState extends State<CriarIdeia> {
       return;
     }
 
-    final titulo = tituloController.text.trim().isEmpty
-        ? null
-        : tituloController.text.trim();
+    setState(() {
+      salvando = true;
+    });
 
-    // Demonstração: ainda não envia os dados para a API.
-    debugPrint('Título: ${titulo ?? "Nova ideia"}');
-    debugPrint('Descrição: ${descricaoController.text.trim()}');
-    debugPrint('Notificação: $notificacao');
+    try {
+      final ideiaCriada = await IdeiaService.criarIdeia(
+        titulo: tituloController.text.trim().isEmpty
+            ? 'Nova Ideia'
+            : tituloController.text.trim(),
+        descricao: descricaoController.text.trim(),
+        notificacao: notificacao,
+      );
 
-    final theme = Theme.of(context);
+      if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
-            SizedBox(width: 10),
-            Text('Ideia criada com sucesso!'),
-          ],
+      Navigator.pop(context, ideiaCriada);
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Não foi possível salvar a ideia: $e'),
         ),
-      ),
-    );
+      );
 
-    Navigator.pop(context);
+      setState(() {
+        salvando = false;
+      });
+    }
   }
 
   Future<void> cancelarCriacao() async {
@@ -204,9 +210,18 @@ class _CriarIdeiaState extends State<CriarIdeia> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FilledButton.icon(
-                              onPressed: salvarIdeia,
-                              icon: const Icon(Icons.save_outlined),
-                              label: const Text('Salvar'),
+                              onPressed: salvando ? null : salvarIdeia,
+                              icon: salvando
+                                ? const SizedBox(
+                                    width: 18,
+                                    height: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Icon(Icons.save_outlined),
+                              label: Text(salvando ? 'Salvando...' : 'Salvar'),
+        
                             ),
                             const SizedBox(height: 8),
                             TextButton.icon(
