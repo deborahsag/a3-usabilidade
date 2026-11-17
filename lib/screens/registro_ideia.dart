@@ -191,23 +191,24 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
       },
     );
 
-    if (confirmar == true && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
-              SizedBox(width: 10),
-              Text('Ideia excluída com sucesso.'),
-            ],
-          ),
-          duration: Duration(seconds: 3),
-        ),
-      );
-      
+    if (confirmar != true || !mounted) return;
+
+    try {
+      await IdeiaService.excluirIdeia(ideia.id);
+
+      if (!mounted) return;
+
       Navigator.pop(
         context,
         const ResultadoRegistroIdeia.excluida(),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Não foi possível excluir a ideia: $e'),
+        ),
       );
     }
   }

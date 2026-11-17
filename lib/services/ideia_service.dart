@@ -82,4 +82,16 @@ class IdeiaService {
       jsonDecode(resposta.body) as Map<String, dynamic>,
     );
   }
+
+  //DELETE excluir uma ideia
+  static Future<void> excluirIdeia(String id) async {
+    final resposta = await http.delete(
+      Uri.parse('$baseUrl/ideias/$id'),
+    );
+
+    if (resposta.statusCode != 200) {
+      throw Exception('Erro ao excluir ideia: ${resposta.body}');
+    }
+  }
+
 }
