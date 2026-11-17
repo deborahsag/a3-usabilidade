@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:a3_usabilidade/capsula.dart';
 
 import 'data/ideias_exemplo.dart';
+import 'data/projetos_exemplo.dart';
 
 void main() {
   runApp(const CapsulaApp());
@@ -110,11 +111,73 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
   int currentPageIndex = 0;
 
   late List<Ideia> ideias;
+  late List<Projeto> projetos;
 
   @override
   void initState() {
     super.initState();
     ideias = List<Ideia>.of(ideiasExemplo);
+    projetos = List<Projeto>.of(projetosExemplo);
+  }
+
+  List<T> _atualizarRegistro<T>(
+    List<T> registros,
+    T registroAtualizado,
+    String Function(T) obterId,
+  ) {
+    return registros.map((registro) {
+      return obterId(registro) == obterId(registroAtualizado)
+          ? registroAtualizado
+          : registro;
+    }).toList();
+  }
+
+  List<T> _excluirRegistro<T>(
+    List<T> registros,
+    String id,
+    String Function(T) obterId,
+  ) {
+    return registros.where((registro) => obterId(registro) != id).toList();
+  }
+
+  void atualizarIdeia(Ideia ideiaAtualizada) {
+    setState(() {
+      ideias = _atualizarRegistro(
+        ideias,
+        ideiaAtualizada,
+        (ideia) => ideia.id,
+      );
+    });
+  }
+
+  void excluirIdeia(String id) {
+    setState(() {
+      ideias = _excluirRegistro(
+        ideias,
+        id,
+        (ideia) => ideia.id,
+      );
+    });
+  }
+
+  void atualizarProjeto(Projeto projetoAtualizado) {
+    setState(() {
+      projetos = _atualizarRegistro(
+        projetos,
+        projetoAtualizado,
+        (projeto) => projeto.id,
+      );
+    });
+  }
+
+  void excluirProjeto(String id) {
+    setState(() {
+      projetos = _excluirRegistro(
+        projetos,
+        id,
+        (projeto) => projeto.id,
+      );
+    });
   }
 
   void abrirCriarIdeia() {
@@ -123,22 +186,6 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
         builder: (context) => const CriarIdeia(),
       ),
     );
-  }
-
-  void atualizarIdeia(Ideia ideiaAtualizada) {
-    setState(() {
-      ideias = ideias.map((ideia) {
-        return ideia.id == ideiaAtualizada.id
-        ? ideiaAtualizada
-        : ideia;
-      }).toList();
-    });
-  }
-
-  void excluirIdeia(String id) {
-    setState(() {
-      ideias.removeWhere((ideia) => ideia.id == id);
-    });
   }
   
   @override
@@ -187,28 +234,11 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
         ),
         
         /// Histórico de Projetos
-        HistoricoIdeias(
-        ideias: [
-          Ideia(
-            id: '1',
-            titulo: 'Projeto 4',
-            descricao: 'Descrição do projeto',
-            notificacao: 1,
-            timestamp: '16/11/2026',
-            arquivada: false,
-          ),
-          Ideia(
-            id: '3',
-            titulo: 'Um projeto um pouco mais longo para testar',
-            descricao: 'Mais uma descrição',
-            notificacao: 1,
-            timestamp: '14/11/2026',
-            arquivada: true,
-          ),
-        ],
-        onIdeiaAtualizada: atualizarIdeia,
-        onIdeiaExcluida: excluirIdeia,
-      ),
+        HistoricoProjetos(
+          projetos: projetos,
+          onProjetoAtualizado: atualizarProjeto,
+          onProjetoExcluido: excluirProjeto,
+        ),
       ][currentPageIndex],
     );
   }

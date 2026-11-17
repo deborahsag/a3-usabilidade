@@ -3,34 +3,46 @@ import 'ideia.dart';
 final List<Ideia> ideiasExemplo = [
   Ideia(
     id: '1',
-    titulo: 'Aplicativo de organização',
-    descricao: 'Um aplicativo para organizar tarefas e compromissos.',
-    notificacao: 1,
-    timestamp: '16/11/2026',
+    titulo: 'Aplicativo de receitas',
+    descricao: 'Criar um aplicativo para organizar receitas, '
+        'montar cardápios semanais e gerar listas de compras.',
+    notificacao: 3,
+    timestamp: '2026-11-17T09:30:00-03:00',
     arquivada: false,
   ),
   Ideia(
     id: '2',
-    titulo: 'Sistema de gerenciamento financeiro',
-    descricao: 'Controle de despesas e receitas pessoais.',
+    titulo: 'Clube de leitura',
+    descricao: 'Uma plataforma para organizar leituras coletivas, '
+        'compartilhar opiniões e acompanhar o progresso dos participantes.',
     notificacao: 2,
-    timestamp: '15/11/2026',
+    timestamp: '2026-11-16T14:15:00-03:00',
     arquivada: false,
   ),
   Ideia(
     id: '3',
-    titulo: 'Uma ideia com um título bastante longo para testar o comportamento do card',
-    descricao: 'Descrição de teste.',
-    notificacao: 3,
-    timestamp: '14/11/2026',
-    arquivada: true,
+    titulo: 'Horta comunitária',
+    descricao: 'Organizar uma horta compartilhada no bairro.',
+    notificacao: 1,
+    timestamp: '2026-11-15T11:00:00-03:00',
+    arquivada: false,
   ),
   Ideia(
     id: '4',
-    titulo: 'Cápsula',
-    descricao: 'Um espaço para guardar ideias e projetos. Quero fazer uma descrição bem maior para ver o que acontece com o card. Por isso eu estou sendo bem prolixa nessa edição. Lalalalalalalalalalallaa como é bom enrolar.',
+    titulo: 'Estudar acessibilidade digital',
+    descricao: 'Pesquisar boas práticas de acessibilidade em '
+        'interfaces e aplicações móveis.',
     notificacao: 0,
-    timestamp: '13/11/2026',
+    timestamp: '2026-11-14T16:45:00-03:00',
+    arquivada: true,
+  ),
+  Ideia(
+    id: '5',
+    titulo: 'Uma ideia com um título propositalmente muito longo '
+        'para testar o comportamento visual do card',
+    descricao: 'Exemplo para testar a apresentação de títulos extensos.',
+    notificacao: 2,
+    timestamp: '2026-11-13T08:20:00-03:00',
     arquivada: false,
   ),
 ];
