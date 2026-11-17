@@ -28,6 +28,7 @@ class RegistroIdeia extends StatefulWidget {
 
 class _RegistroIdeiaState extends State<RegistroIdeia> {
   late Ideia ideia;
+  bool salvando = false;
 
   @override
   void initState() {
@@ -73,6 +74,35 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
     setState(() {
       ideia = ideia.copyWith(titulo: novoTitulo);
     });
+  }
+
+  Future<void> salvarAlteracoes() async {
+    setState(() {
+      salvando = true;
+    });
+
+    try {
+      final ideiaAtualizada = await IdeiaService.atualizarIdeia(ideia);
+
+      if (!mounted) return;
+
+      Navigator.pop(
+        context,
+        ResultadoRegistroIdeia.atualizada(ideiaAtualizada),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Não foi possível atualizar a ideia: $e'),
+        ),
+      );
+
+      setState(() {
+        salvando = false;
+      });
+    }
   }
 
   Future<void> criarProjeto() async {
@@ -188,15 +218,11 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalhes da ideia'),
+        title: const Text('Detalhes da ideia'),
         leading: BackButton(
           color: theme.colorScheme.tertiary,
-          onPressed: () {
-            Navigator.pop(
-              context,
-              ResultadoRegistroIdeia.atualizada(ideia),
-            );
-          },
+          onPressed: salvando ? null : salvarAlteracoes,
+
         ),
       ),
       body: LayoutBuilder(

@@ -60,4 +60,26 @@ class IdeiaService {
       jsonDecode(resposta.body) as Map<String, dynamic>,
     );
   }
+
+  //PUT atualizar uma ideia
+  static Future<Ideia> atualizarIdeia(Ideia ideia) async {
+    final resposta = await http.put(
+      Uri.parse('$baseUrl/ideias/${ideia.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'titulo': ideia.titulo,
+        'notificacao': ideia.notificacao,
+      }),
+    );
+
+    if (resposta.statusCode != 200) {
+      throw Exception('Erro ao atualizar ideia: ${resposta.body}');
+    }
+
+    return Ideia.fromJson(
+      jsonDecode(resposta.body) as Map<String, dynamic>,
+    );
+  }
 }
