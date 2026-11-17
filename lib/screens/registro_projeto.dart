@@ -176,7 +176,52 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                           ),*/
                         ],
                       ),
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text('Data de criação: '),
+                          Text(TimestampHelper.formatar(projeto.timestamp)),
+                        ]
+                      ),
+                      const SizedBox(height: 30),
+                      Card(
+                        color: theme.colorScheme.surface,
+                        margin: EdgeInsets.all(0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  /*Text(
+                                    'Ideia original: ',
+                                    style: theme.textTheme.bodyLarge,
+                                  ),*/
+                                  Text(
+                                    projeto.ideiaOriginalTitulo,
+                                    style: theme.textTheme.headlineSmall,
+                                    softWrap: true,
+                                  ),
+                                ]
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                projeto.ideiaOriginalDescricao,
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                )
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                TimestampHelper.formatar(projeto.timestamp),
+                                style: theme.textTheme.bodySmall
+                              ),
+                            ]
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                       Card(
                         color: theme.colorScheme.surface,
                         margin: EdgeInsets.all(0),
@@ -184,11 +229,6 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                           padding: const EdgeInsets.all(20),
                           child: Text(projeto.descricao),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        TimestampHelper.formatar(projeto.timestamp),
-                        style: theme.textTheme.bodySmall
                       ),
                       const SizedBox(height: 50),
                       Row(

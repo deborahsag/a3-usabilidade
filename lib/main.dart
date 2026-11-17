@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'package:a3_usabilidade/capsula.dart';
@@ -194,8 +195,12 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Center(child: Text('Cápsula', style: TextStyle(color: theme.colorScheme.primary))),
+        backgroundColor: theme.scaffoldBackgroundColor,
+        title: SvgPicture.asset(
+          'assets/images/logo.svg',
+          height: 42,
+        ),
+        centerTitle: true,
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -203,7 +208,7 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: Theme.of(context).colorScheme.primary,
+        indicatorColor: theme.colorScheme.primary,
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
