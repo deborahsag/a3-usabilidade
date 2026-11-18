@@ -25,10 +25,18 @@ class _CriarIdeiaState extends State<CriarIdeia> {
   }
 
   Future<void> salvarIdeia() async {
+    final theme = Theme.of(context);
+
     if (descricaoController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('A descrição é obrigatória.'),
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.warning, color: theme.colorScheme.tertiary),
+              SizedBox(width: 10),
+              Text('A descrição é obrigatória.'),
+            ],
+          ),
         ),
       );
       return;
@@ -55,7 +63,13 @@ class _CriarIdeiaState extends State<CriarIdeia> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Não foi possível salvar a ideia: $e'),
+          content: Row(
+            children: [
+              Icon(Icons.error, color: theme.colorScheme.error),
+              SizedBox(width: 10),
+              Text('Não foi possível salvar a ideia: $e'),
+            ],
+          ),
         ),
       );
 

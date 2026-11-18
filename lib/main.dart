@@ -262,7 +262,7 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
             children: [
               Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
               SizedBox(width: 10),
-              Text('Projeto criado com sucesso!'),
+              Text('Ideia criada com sucesso!'),
             ],
           ),
           duration: Duration(seconds: 3),
