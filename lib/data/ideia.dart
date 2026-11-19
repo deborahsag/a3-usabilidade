@@ -5,7 +5,7 @@ class Ideia {
     required this.descricao,
     required this.notificacao,
     required this.timestamp,
-    required this.arquivada,
+    required this.arquivado,
     required this.projetoId,
   });
 
@@ -14,7 +14,7 @@ class Ideia {
   final String descricao;
   final int notificacao;
   final String timestamp;
-  final bool arquivada;
+  final bool arquivado;
   final String? projetoId;
 
   factory Ideia.fromJson(Map<String, dynamic> json) {
@@ -24,7 +24,7 @@ class Ideia {
       descricao: json['descricao'] as String,
       notificacao: json['notificacao'] as int,
       timestamp: json['timestamp'] as String,
-      arquivada: json['arquivada'] as bool,
+      arquivado: json['arquivado'] as bool,
       projetoId: json['projetoId'] as String?,
     );
   }
@@ -34,7 +34,7 @@ class Ideia {
     String? descricao,
     int? notificacao,
     String? timestamp,
-    bool? arquivada,
+    bool? arquivado,
     String? projetoId,
   }) {
     return Ideia(
@@ -43,7 +43,7 @@ class Ideia {
       descricao: descricao ?? this.descricao,
       notificacao: notificacao ?? this.notificacao,
       timestamp: timestamp ?? this.timestamp,
-      arquivada: arquivada ?? this.arquivada,
+      arquivado: arquivado ?? this.arquivado,
       projetoId: projetoId ?? this.projetoId,
     );
   }
