@@ -39,6 +39,30 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
     );
   }
 
+  void adicionarCampoTexto() {
+    final campos = List<CampoProjeto>.from(
+      projeto.camposProjeto ?? [],
+    );
+
+    campos.add(CampoTexto(texto: ''));
+
+    setState(() {
+      projeto = projeto.copyWith(camposProjeto: campos);
+    });
+  }
+
+  void adicionarCampoLista() {
+    final campos = List<CampoProjeto>.from(
+      projeto.camposProjeto ?? [],
+    );
+
+    campos.add(CampoLista(checklist: []));
+
+    setState(() {
+      projeto = projeto.copyWith(camposProjeto: campos);
+    });
+  }
+
   void atualizarCampo(int indice, CampoProjeto campo) {
     final campos = List<CampoProjeto>.from(
       projeto.camposProjeto ?? [],
@@ -256,6 +280,37 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
                         onCampoAlterado: atualizarCampo,
                         onExcluirCampo: excluirCampo,
                       ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlinedButton(
+                            onPressed: adicionarCampoTexto,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.add),
+                                const Icon(Icons.text_fields),
+                                const SizedBox(width: 8),
+                                const Text('Texto'),
+                              ],
+                            )
+                          ),
+                          const SizedBox(width: 12),
+                          OutlinedButton(
+                            onPressed: adicionarCampoLista,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.add),
+                                const Icon(Icons.checklist),
+                                const SizedBox(width: 8),
+                                const Text('Checklist'),
+                              ],
+                            )
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 50),
                       Row(
                         children: [
@@ -306,7 +361,7 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
                                   ResultadoRegistroProjeto.atualizado(projeto),
                                 );
                               },
-                              icon: const Icon(Icons.edit),
+                              icon: const Icon(Icons.save),
                               label: const Text('Salvar'),
                             ),
                             const SizedBox(height: 8),

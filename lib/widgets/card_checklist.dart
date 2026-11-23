@@ -119,66 +119,71 @@ class _CardChecklistEditavelState extends State<CardChecklistEditavel> {
 
     return Card(
       color: theme.colorScheme.surface,
-      child: ListView(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          ...checklist.map((item) {
-            return ListTile(
-              leading: Checkbox(
-                value: item.isChecked,
-                onChanged: (bool? value) {
-                  setState(() {
-                    item.isChecked = value ?? false;
-                  });
+      margin: EdgeInsets.all(0),
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            ...checklist.map((item) {
+              return ListTile(
+                leading: Checkbox(
+                  value: item.isChecked,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      item.isChecked = value ?? false;
+                    });
 
-                  notificarAlteracao();
-                },
-              ),
-              title: Text(item.texto),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete_outline),
-                onPressed: () {
-                  setState(() {
-                    checklist.remove(item);
-                  });
+                    notificarAlteracao();
+                  },
+                ),
+                title: Text(item.texto),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete_outline),
+                  tooltip: 'Excluir item',
+                  onPressed: () {
+                    setState(() {
+                      checklist.remove(item);
+                    });
 
-                  notificarAlteracao();
-                },
-              ),
-            );
-          }),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controlador,
-                    decoration: const InputDecoration(
-                      hintText: 'Adicionar item',
-                      border: OutlineInputBorder(),
+                    notificarAlteracao();
+                  },
+                ),
+              );
+            }),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controlador,
+                      decoration: const InputDecoration(
+                        hintText: 'Adicionar item',
+                        border: OutlineInputBorder(),
+                      ),
+                      onSubmitted: (_) => adicionarItem(),
                     ),
-                    onSubmitted: (_) => adicionarItem(),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: adicionarItem,
-                ),
-              ],
+                  IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: adicionarItem,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: const Icon(Icons.delete_outline),
-              onPressed: widget.onExcluir,
-              tooltip: 'Excluir bloco inteiro',
-              color: theme.colorScheme.error,
+            Align(
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                icon: const Icon(Icons.delete_outline),
+                onPressed: widget.onExcluir,
+                tooltip: 'Excluir bloco inteiro',
+                color: theme.colorScheme.error,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
