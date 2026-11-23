@@ -84,7 +84,7 @@ class CardCampoProjetoEditavel extends StatelessWidget {
     final campos = this.campos;
 
     if (campos == null || campos.isEmpty) {
-      return const Text('Você ainda não tem blocos de projeto.');
+      return const Center(child: Text('Você ainda não tem blocos de projeto.'));
     }
 
     return Column(

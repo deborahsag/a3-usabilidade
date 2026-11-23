@@ -67,7 +67,9 @@ class _CriarIdeiaState extends State<CriarIdeia> {
             children: [
               Icon(Icons.error, color: theme.colorScheme.error),
               SizedBox(width: 10),
-              Text('Não foi possível salvar a ideia: $e'),
+              Expanded(
+                child: Text('Não foi possível salvar a ideia: $e')
+              ),
             ],
           ),
         ),

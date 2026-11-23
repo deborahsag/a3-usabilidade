@@ -267,7 +267,7 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
                         children: [
@@ -342,7 +342,16 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                         child: Column(
                           children: [
                             FilledButton.icon(
-                              onPressed: criarProjeto,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CriarProjeto(
+                                      ideiaOriginal: ideia,
+                                    ),
+                                  ),
+                                );
+                              },
                               icon: const Icon(Icons.add),
                               label: const Text('Criar projeto'),
                             ),
