@@ -6,16 +6,24 @@ class CardCampoProjeto extends StatelessWidget {
   const CardCampoProjeto({
     super.key,
     this.campos,
+    required this.onCampoAlterado,
   });
 
   final List<CampoProjeto>? campos;
+  final void Function(int indice, CampoProjeto campo) onCampoAlterado;
 
-  Widget construirCampo(CampoProjeto campo) {
+  Widget construirCampo(CampoProjeto campo, int indice) {
     return switch (campo) {
       CampoTexto(:final texto) => CardTexto(texto: texto),
       CampoLista(:final checklist) => CardChecklist(
-          checklist: checklist,
-        ),
+        checklist: checklist,
+        onChanged: (novoChecklist) {
+          onCampoAlterado(
+            indice,
+            CampoLista(checklist: novoChecklist),
+          );
+        },
+      ),
     };
   }
 
@@ -30,7 +38,9 @@ class CardCampoProjeto extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 8,
-      children: campos.map(construirCampo).toList(),
+      children: campos.asMap().entries.map((entrada) {
+        return construirCampo(entrada.value, entrada.key);
+      }).toList(),
     );
   }
 }
@@ -55,6 +65,12 @@ class CardCampoProjetoEditavel extends StatelessWidget {
         ),
       CampoLista(:final checklist) => CardChecklistEditavel(
           checklist: checklist,
+          onChanged: (novoChecklist) {
+            onCampoAlterado(
+              indice,
+              CampoLista(checklist: novoChecklist),
+            );
+          }
         ),
     };
   }

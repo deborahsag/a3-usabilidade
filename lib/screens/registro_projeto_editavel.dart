@@ -2,18 +2,6 @@ import 'package:material_ui/material_ui.dart';
 
 import 'package:a3_usabilidade/capsula.dart';
 
-class ResultadoRegistroProjetoEditavel {
-  const ResultadoRegistroProjetoEditavel.atualizado(this.projeto)
-    : excluido = false;
-
-  const ResultadoRegistroProjetoEditavel.excluido()
-    : projeto = null,
-      excluido = true;
-
-  final Projeto? projeto;
-  final bool excluido;
-}
-
 class RegistroProjetoEditavel extends StatefulWidget {
   const RegistroProjetoEditavel({
     super.key,
@@ -32,7 +20,23 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
   @override
   void initState() {
     super.initState();
-    projeto = widget.projeto;
+
+    projeto = widget.projeto.copyWith(
+      camposProjeto: widget.projeto.camposProjeto?.map((campo) {
+        return switch (campo) {
+          CampoTexto(:final texto) => CampoTexto(texto: texto),
+
+          CampoLista(:final checklist) => CampoLista(
+            checklist: checklist.map((item) {
+              return ChecklistItem(
+                isChecked: item.isChecked,
+                texto: item.texto,
+              );
+            }).toList(),
+          ),
+        };
+      }).toList(),
+    );
   }
 
   void atualizarCampo(int indice, CampoProjeto campo) {
@@ -136,7 +140,7 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
       
       Navigator.pop(
         context,
-        const ResultadoRegistroProjetoEditavel.excluido(),
+        const ResultadoRegistroProjeto.excluido(),
       );
     }
   }
@@ -286,7 +290,7 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
                               onPressed: () {
                                 Navigator.pop(
                                   context,
-                                  ResultadoRegistroProjetoEditavel.atualizado(projeto),
+                                  ResultadoRegistroProjeto.atualizado(projeto),
                                 );
                               },
                               icon: const Icon(Icons.edit),

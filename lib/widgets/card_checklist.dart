@@ -1,32 +1,15 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:a3_usabilidade/capsula.dart';
 
-class CardChecklist extends StatefulWidget {
+class CardChecklist extends StatelessWidget {
   const CardChecklist({
     super.key,
     required this.checklist,
+    required this.onChanged,
   });
 
   final List<ChecklistItem> checklist;
-
-  @override
-  State<CardChecklist> createState() => _CardChecklistState();
-}
-
-class _CardChecklistState extends State<CardChecklist> {
-  late List<ChecklistItem> checklist;
-
-  @override
-  void initState() {
-    super.initState();
-
-    checklist = widget.checklist.map((item) {
-      return ChecklistItem(
-        isChecked: item.isChecked,
-        texto: item.texto,
-      );
-    }).toList();
-  }
+  final ValueChanged<List<ChecklistItem>> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -38,18 +21,25 @@ class _CardChecklistState extends State<CardChecklist> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: checklist.map((item) {
-            return ListTile(
-              leading: Checkbox(
-                value: item.isChecked,
-                onChanged: (bool? value) {
-                  setState(() {
-                    item.isChecked = value!;
-                  });
-                },
-              ),
-              title: Text(item.texto),
-            );
-          }).toList(),
+          return ListTile(
+            leading: Checkbox(
+              value: item.isChecked,
+              onChanged: (bool? value) {
+                final novoChecklist = checklist.map((itemAtual) {
+                  return ChecklistItem(
+                    isChecked: identical(itemAtual, item)
+                        ? (value ?? false)
+                        : itemAtual.isChecked,
+                    texto: itemAtual.texto,
+                  );
+                }).toList();
+
+                onChanged(novoChecklist);
+              },
+            ),
+            title: Text(item.texto),
+          );
+        }).toList(),
       ),
     );
   }
@@ -59,9 +49,11 @@ class CardChecklistEditavel extends StatefulWidget {
   const CardChecklistEditavel({
     super.key,
     required this.checklist,
+    required this.onChanged,
   });
 
   final List<ChecklistItem> checklist;
+  final ValueChanged<List<ChecklistItem>> onChanged;
 
   @override
   State<CardChecklistEditavel> createState() => _CardChecklistEditavelState();
@@ -71,6 +63,17 @@ class _CardChecklistEditavelState extends State<CardChecklistEditavel> {
   late List<ChecklistItem> checklist;
 
   final TextEditingController controlador = TextEditingController();
+
+  void notificarAlteracao() {
+    widget.onChanged(
+      checklist.map((item) {
+        return ChecklistItem(
+          isChecked: item.isChecked,
+          texto: item.texto,
+          );
+      }).toList(),
+    );
+  }
 
   void adicionarItem() {
     final texto = controlador.text.trim();
@@ -86,6 +89,7 @@ class _CardChecklistEditavelState extends State<CardChecklistEditavel> {
       );
     });
 
+    notificarAlteracao();
     controlador.clear();
   }
 
@@ -123,8 +127,10 @@ class _CardChecklistEditavelState extends State<CardChecklistEditavel> {
                 value: item.isChecked,
                 onChanged: (bool? value) {
                   setState(() {
-                    item.isChecked = value!;
+                    item.isChecked = value ?? false;
                   });
+
+                  notificarAlteracao();
                 },
               ),
               title: Text(item.texto),
@@ -134,6 +140,8 @@ class _CardChecklistEditavelState extends State<CardChecklistEditavel> {
                   setState(() {
                     checklist.remove(item);
                   });
+
+                  notificarAlteracao();
                 },
               ),
             );

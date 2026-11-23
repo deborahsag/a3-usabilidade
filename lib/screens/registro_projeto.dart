@@ -35,6 +35,20 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
     projeto = widget.projeto;
   }
 
+  void atualizarCampo(int indice, CampoProjeto campo) {
+    final campos = List<CampoProjeto>.from(
+      projeto.camposProjeto ?? [],
+    );
+
+    campos[indice] = campo;
+
+    setState(() {
+      projeto = projeto.copyWith(
+        camposProjeto: campos,
+      );
+    });
+  }  
+
   Future<void> editarProjeto() async {
     final resultado = await Navigator.push<ResultadoRegistroProjeto>(
       context,
@@ -198,7 +212,10 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      CardCampoProjeto(campos: projeto.camposProjeto),
+                      CardCampoProjeto(
+                        campos: projeto.camposProjeto,
+                        onCampoAlterado: atualizarCampo,
+                      ),
                       const SizedBox(height: 50),
                       Row(
                         children: [
