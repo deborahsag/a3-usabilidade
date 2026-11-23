@@ -35,44 +35,31 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
     projeto = widget.projeto;
   }
 
-  Future<void> editarTitulo() async {
-    final controller = TextEditingController(text: projeto.titulo);
-
-    final novoTitulo = await showDialog<String>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Editar título'),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            decoration: const InputDecoration(
-              labelText: 'Título',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
-            ),
-            FilledButton(
-              onPressed: () {
-                Navigator.pop(context, controller.text.trim());
-              },
-              child: const Text('Salvar'),
-            ),
-          ],
-        );
-      },
+  Future<void> editarProjeto() async {
+    final resultado = await Navigator.push<ResultadoRegistroProjeto>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegistroProjetoEditavel(
+          projeto: projeto,
+        ),
+      ),
     );
 
-    controller.dispose();
+    if (!mounted || resultado == null) return;
 
-    if (novoTitulo == null || novoTitulo.isEmpty) return;
+    if(resultado.excluido) {
+      Navigator.pop(
+        context,
+        const ResultadoRegistroProjeto.excluido(),
+      );
+      return;
+    }
 
-    setState(() {
-      projeto = projeto.copyWith(titulo: novoTitulo);
-    });
+    if (resultado.projeto != null) {
+      setState(() {
+        projeto = resultado.projeto!;
+      });
+    }
   }
 
   Future<void> excluirProjeto() async {
@@ -161,20 +148,9 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              projeto.titulo,
-                              style: theme.textTheme.headlineLarge,
-                            ),
-                          ),
-                          /*IconButton(
-                            onPressed: editarTitulo,
-                            icon: const Icon(Icons.edit),
-                            tooltip: 'Editar título',
-                          ),*/
-                        ],
+                      Text(
+                        projeto.titulo,
+                        style: theme.textTheme.headlineLarge,
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -222,14 +198,7 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Card(
-                        color: theme.colorScheme.surface,
-                        margin: EdgeInsets.all(0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Text(projeto.descricao),
-                        ),
-                      ),
+                      CardCampoProjeto(campos: projeto.camposProjeto),
                       const SizedBox(height: 50),
                       Row(
                         children: [
@@ -274,7 +243,7 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                         child: Column(
                           children: [
                             FilledButton.icon(
-                              onPressed: (){},
+                              onPressed: editarProjeto,
                               icon: const Icon(Icons.edit),
                               label: const Text('Editar'),
                             ),
