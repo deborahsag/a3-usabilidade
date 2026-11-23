@@ -50,10 +50,12 @@ class CardCampoProjetoEditavel extends StatelessWidget {
     super.key,
     this.campos,
     required this.onCampoAlterado,
+    required this.onExcluirCampo,
   });
 
   final List<CampoProjeto>? campos;
   final void Function(int indice, CampoProjeto campo) onCampoAlterado;
+  final ValueChanged<int> onExcluirCampo;
 
   Widget construirCampo(CampoProjeto campo, int indice) {
     return switch (campo) {
@@ -62,6 +64,7 @@ class CardCampoProjetoEditavel extends StatelessWidget {
           onChanged: (novoTexto) {
             onCampoAlterado(indice, CampoTexto(texto: novoTexto));
           },
+          onExcluir: () => onExcluirCampo(indice),
         ),
       CampoLista(:final checklist) => CardChecklistEditavel(
           checklist: checklist,
@@ -70,7 +73,8 @@ class CardCampoProjetoEditavel extends StatelessWidget {
               indice,
               CampoLista(checklist: novoChecklist),
             );
-          }
+          },
+          onExcluir: () => onExcluirCampo(indice),
         ),
     };
   }

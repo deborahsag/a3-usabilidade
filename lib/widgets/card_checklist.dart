@@ -50,10 +50,12 @@ class CardChecklistEditavel extends StatefulWidget {
     super.key,
     required this.checklist,
     required this.onChanged,
+    required this.onExcluir,
   });
 
   final List<ChecklistItem> checklist;
   final ValueChanged<List<ChecklistItem>> onChanged;
+  final VoidCallback onExcluir;
 
   @override
   State<CardChecklistEditavel> createState() => _CardChecklistEditavelState();
@@ -165,6 +167,15 @@ class _CardChecklistEditavelState extends State<CardChecklistEditavel> {
                   onPressed: adicionarItem,
                 ),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: widget.onExcluir,
+              tooltip: 'Excluir bloco inteiro',
+              color: theme.colorScheme.error,
             ),
           ),
         ],

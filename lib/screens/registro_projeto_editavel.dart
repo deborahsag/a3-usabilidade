@@ -53,6 +53,18 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
     });
   }
 
+  void excluirCampo(int indice) {
+    final campos = List<CampoProjeto>.from(
+      projeto.camposProjeto ?? [],
+    );
+
+    campos.removeAt(indice);
+
+    setState(() {
+      projeto = projeto.copyWith(camposProjeto: campos);
+    });
+  }
+
   Future<void> editarTitulo() async {
     final controller = TextEditingController(text: projeto.titulo);
 
@@ -242,6 +254,7 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
                       CardCampoProjetoEditavel(
                         campos: projeto.camposProjeto,
                         onCampoAlterado: atualizarCampo,
+                        onExcluirCampo: excluirCampo,
                       ),
                       const SizedBox(height: 50),
                       Row(
