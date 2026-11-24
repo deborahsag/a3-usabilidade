@@ -130,10 +130,10 @@ class _CriarIdeiaState extends State<CriarIdeia> {
       },
       child: Scaffold(
         appBar: AppBar(
-        leading: BackButton(
-          color: theme.colorScheme.tertiary,
-        ),
-        title: const Text('Nova ideia'),
+          title: const Text('Nova ideia'),
+          leading: BackButton(
+            color: theme.colorScheme.tertiary,
+          ),
         ),
         body: LayoutBuilder(
           builder: (context, constraints) {
@@ -149,7 +149,7 @@ class _CriarIdeiaState extends State<CriarIdeia> {
                       maxWidth: 600,
                     ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Título

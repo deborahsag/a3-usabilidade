@@ -23,6 +23,19 @@ sealed class CampoProjeto {
       _ => throw FormatException('Tipo de campo desconhecido.'),
     };
   }
+
+  Map<String, dynamic> toJson() {
+    return switch (this) {
+      CampoTexto(:final texto) => {
+        'tipo': 'texto',
+        'texto': texto,
+      },
+      CampoLista(:final checklist) => {
+        'tipo': 'lista',
+        'checklist': checklist.map((item) => item.toJson()).toList(),
+      },
+    };
+  }
 }
 
 class CampoTexto extends CampoProjeto {
@@ -47,6 +60,13 @@ class ChecklistItem {
       isChecked: json['isChecked'] as bool, 
       texto: json['texto'] as String,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isChecked': isChecked,
+      'texto': texto,
+    };
   }
 }
 

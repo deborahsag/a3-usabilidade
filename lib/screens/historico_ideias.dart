@@ -8,11 +8,13 @@ class HistoricoIdeias extends StatelessWidget {
     required this.ideias,
     required this.onIdeiaAtualizada,
     required this.onIdeiaExcluida,
+    required this.onProjetoCriado,
   });
 
   final List<Ideia> ideias;
   final ValueChanged<Ideia> onIdeiaAtualizada;
   final ValueChanged<String> onIdeiaExcluida;
+  final ValueChanged<Projeto> onProjetoCriado;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,10 @@ class HistoricoIdeias extends StatelessWidget {
               onIdeiaExcluida(ideia.id);
             } else if (resultado.ideia != null) {
               onIdeiaAtualizada(resultado.ideia!);
+            }
+
+            if (resultado.projetoCriado != null) {
+              onProjetoCriado(resultado.projetoCriado!);
             }
           },
         );

@@ -41,7 +41,9 @@ class ProjetoService {
         'titulo': titulo,
         'ideiaOriginalId': ideiaOriginalId,
         'notificacao': notificacao,
-        'camposProjeto': camposProjeto,
+        'camposProjeto': camposProjeto
+          ?.map((campo) => campo.toJson())
+          .toList(),
       }),
     );
 

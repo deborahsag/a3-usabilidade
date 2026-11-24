@@ -3,14 +3,18 @@ import 'package:material_ui/material_ui.dart';
 import 'package:a3_usabilidade/capsula.dart';
 
 class ResultadoRegistroIdeia {
-  const ResultadoRegistroIdeia.atualizada(this.ideia)
-    : excluida = false;
+  const ResultadoRegistroIdeia.atualizada(
+    this.ideia, {
+    this.projetoCriado,
+    }) : excluida = false;
 
   const ResultadoRegistroIdeia.excluida()
     : ideia = null,
+    projetoCriado = null,
       excluida = true;
 
   final Ideia? ideia;
+  final Projeto? projetoCriado;
   final bool excluida;
 }
 
@@ -29,6 +33,7 @@ class RegistroIdeia extends StatefulWidget {
 class _RegistroIdeiaState extends State<RegistroIdeia> {
   late Ideia ideia;
   bool salvando = false;
+  Projeto? projetoCriado;
 
   @override
   void initState() {
@@ -90,7 +95,10 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
 
       Navigator.pop(
         context,
-        ResultadoRegistroIdeia.atualizada(ideiaAtualizada),
+        ResultadoRegistroIdeia.atualizada(
+          ideiaAtualizada,
+          projetoCriado: projetoCriado
+        ),
       );
     } catch (e) {
       if (!mounted) return;
@@ -165,6 +173,39 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
           ),
           duration: Duration(seconds: 3),
         ),
+    );
+  }
+
+  Future<void> abrirCriarProjeto() async {
+    final theme = Theme.of(context);
+
+    final novoProjeto = await Navigator.of(context).push<Projeto>(
+      MaterialPageRoute(
+        builder: (context) => CriarProjeto(ideiaOriginal: ideia),
+      ),
+    );
+
+    if (novoProjeto == null || !mounted) return;
+
+    setState(() {
+      ideia = ideia.copyWith(
+        projetoId: novoProjeto.id,
+      );
+
+      projetoCriado = novoProjeto;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle_outline, color: theme.colorScheme.primary),
+            SizedBox(width: 10),
+            Expanded(child: Text('Projeto criado com sucesso!'))
+          ]
+        ),
+        duration: Duration(seconds: 3),
+      ),
     );
   }
 
@@ -342,16 +383,7 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                         child: Column(
                           children: [
                             FilledButton.icon(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CriarProjeto(
-                                      ideiaOriginal: ideia,
-                                    ),
-                                  ),
-                                );
-                              },
+                              onPressed: abrirCriarProjeto,
                               icon: const Icon(Icons.add),
                               label: const Text('Criar projeto'),
                             ),

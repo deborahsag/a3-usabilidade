@@ -178,6 +178,11 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
       ideias: ideias,
       onIdeiaAtualizada: atualizarIdeia,
       onIdeiaExcluida: excluirIdeia,
+      onProjetoCriado: (projeto) {
+        setState(() {
+          projetos.add(projeto);
+        });
+      },
     );
   }
 

@@ -25,7 +25,6 @@ class _CriarProjetoState extends State<CriarProjeto> {
   @override
   void initState() {
     super.initState();
-
     notificacao = widget.ideiaOriginal.notificacao;
   }
 
