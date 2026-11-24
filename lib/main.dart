@@ -183,6 +183,7 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
           projetos.add(projeto);
         });
       },
+      onProjetoExcluido: excluirProjeto,
     );
   }
 

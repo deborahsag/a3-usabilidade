@@ -22,9 +22,11 @@ class RegistroIdeia extends StatefulWidget {
   const RegistroIdeia({
     super.key,
     required this.ideia,
+    required this.onProjetoExcluido,
   });
 
   final Ideia ideia;
+  final ValueChanged<String> onProjetoExcluido;
 
   @override
   State<RegistroIdeia> createState() => _RegistroIdeiaState();
@@ -209,6 +211,28 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
     );
   }
 
+  Future<void> abrirProjeto() async {
+    final projeto = await ProjetoService.buscarProjetoPorId(
+      ideia.projetoId!,
+    );
+
+    if (!mounted) return;
+
+    final resultado = await Navigator.of(context).push<ResultadoRegistroProjeto>(
+      MaterialPageRoute(
+        builder: (context) => RegistroProjeto(projeto: projeto),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (resultado?.excluido == true) {
+      widget.onProjetoExcluido(projeto.id);
+
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+  }
+
   Future<void> excluirIdeia() async {
     final theme = Theme.of(context);
 
@@ -382,10 +406,16 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
                       Center(
                         child: Column(
                           children: [
-                            FilledButton.icon(
-                              onPressed: abrirCriarProjeto,
-                              icon: const Icon(Icons.add),
-                              label: const Text('Criar projeto'),
+                            ideia.projetoId != null
+                            ? FilledButton.icon(
+                                onPressed: abrirProjeto,
+                                icon: const Icon(Icons.file_open_outlined),
+                                label: const Text('Ir para projeto')
+                            ) 
+                            : FilledButton.icon(
+                                onPressed: abrirCriarProjeto,
+                                icon: const Icon(Icons.add),
+                                label: const Text('Criar projeto')
                             ),
                             const SizedBox(height: 8),
                             TextButton.icon(

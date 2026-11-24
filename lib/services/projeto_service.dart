@@ -24,6 +24,21 @@ class ProjetoService {
     }).toList();
   }
 
+  //GET buscar projeto por id
+    static Future<Projeto> buscarProjetoPorId(String id) async {
+    final resposta = await http.get(
+      Uri.parse('$baseUrl/projetos/$id'),
+    );
+
+    if (resposta.statusCode != 200) {
+      throw Exception('Erro ao buscar projeto: ${resposta.body}');
+    }
+
+    return Projeto.fromJson(
+      jsonDecode(resposta.body) as Map<String, dynamic>,
+    );
+  }
+
   // POST criar um novo projeto
   static Future<Projeto> criarProjeto({
     required String titulo,

@@ -9,12 +9,14 @@ class HistoricoIdeias extends StatelessWidget {
     required this.onIdeiaAtualizada,
     required this.onIdeiaExcluida,
     required this.onProjetoCriado,
+    required this.onProjetoExcluido,
   });
 
   final List<Ideia> ideias;
   final ValueChanged<Ideia> onIdeiaAtualizada;
   final ValueChanged<String> onIdeiaExcluida;
   final ValueChanged<Projeto> onProjetoCriado;
+  final ValueChanged<String> onProjetoExcluido;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,10 @@ class HistoricoIdeias extends StatelessWidget {
             final resultado = await Navigator.of(context)
                 .push<ResultadoRegistroIdeia>(
               MaterialPageRoute(
-                builder: (context) => RegistroIdeia(ideia: ideia),
+                builder: (context) => RegistroIdeia(
+                  ideia: ideia,
+                  onProjetoExcluido: onProjetoExcluido,
+                ),
               ),
             );
 
