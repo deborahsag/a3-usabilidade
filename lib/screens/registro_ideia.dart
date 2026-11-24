@@ -22,10 +22,12 @@ class RegistroIdeia extends StatefulWidget {
   const RegistroIdeia({
     super.key,
     required this.ideia,
+    required this.onProjetoAtualizado,
     required this.onProjetoExcluido,
   });
 
   final Ideia ideia;
+  final ValueChanged<Projeto> onProjetoAtualizado;
   final ValueChanged<String> onProjetoExcluido;
 
   @override
@@ -226,10 +228,13 @@ class _RegistroIdeiaState extends State<RegistroIdeia> {
 
     if (!mounted) return;
 
-    if (resultado?.excluido == true) {
-      widget.onProjetoExcluido(projeto.id);
+    if (resultado == null) return;
 
+    if (resultado.excluido) {
+      widget.onProjetoExcluido(projeto.id);
       Navigator.of(context).popUntil((route) => route.isFirst);
+    } else if (resultado.projeto != null) {
+      widget.onProjetoAtualizado(resultado.projeto!);
     }
   }
 

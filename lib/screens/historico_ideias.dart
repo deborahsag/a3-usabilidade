@@ -9,6 +9,7 @@ class HistoricoIdeias extends StatelessWidget {
     required this.onIdeiaAtualizada,
     required this.onIdeiaExcluida,
     required this.onProjetoCriado,
+    required this.onProjetoAtualizado,
     required this.onProjetoExcluido,
   });
 
@@ -16,6 +17,7 @@ class HistoricoIdeias extends StatelessWidget {
   final ValueChanged<Ideia> onIdeiaAtualizada;
   final ValueChanged<String> onIdeiaExcluida;
   final ValueChanged<Projeto> onProjetoCriado;
+  final ValueChanged<Projeto> onProjetoAtualizado;
   final ValueChanged<String> onProjetoExcluido;
 
   @override
@@ -30,6 +32,7 @@ class HistoricoIdeias extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => RegistroIdeia(
                   ideia: ideia,
+                  onProjetoAtualizado: onProjetoAtualizado,
                   onProjetoExcluido: onProjetoExcluido,
                 ),
               ),

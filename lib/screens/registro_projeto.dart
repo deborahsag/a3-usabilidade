@@ -49,6 +49,28 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
     });
   }  
 
+  Future<void> salvarEVoltar() async {
+    try {
+      final projetoAtualizado =
+          await ProjetoService.atualizarProjeto(projeto);
+
+      if (!mounted) return;
+
+      Navigator.pop(
+        context,
+        ResultadoRegistroProjeto.atualizado(projetoAtualizado),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Não foi possível atualizar o projeto: $e'),
+        ),
+      );
+    }
+  }
+
   Future<void> editarProjeto() async {
     final resultado = await Navigator.push<ResultadoRegistroProjeto>(
       context,
@@ -151,151 +173,152 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
   Widget build (BuildContext context) {
     final theme = Theme.of(context);
     
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Detalhes do projeto'),
-        leading: BackButton(
-          color: theme.colorScheme.tertiary,
-          onPressed: () {
-            Navigator.pop(
-              context,
-              ResultadoRegistroProjeto.atualizado(projeto),
-            );
-          },
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        salvarEVoltar();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Detalhes do projeto'),
+          leading: BackButton(
+            color: theme.colorScheme.tertiary,
+            onPressed: salvarEVoltar,
+          ),
         ),
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight - 48,
-              ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: 600,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        projeto.titulo,
-                        style: theme.textTheme.headlineLarge,
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Text('Data de criação: '),
-                          Text(TimestampHelper.formatar(projeto.timestamp)),
-                        ]
-                      ),
-                      const SizedBox(height: 30),
-                      Card(
-                        color: theme.colorScheme.surface,
-                        margin: EdgeInsets.all(0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                projeto.ideiaOriginalTitulo,
-                                style: theme.textTheme.headlineSmall,
-                                softWrap: true,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                projeto.ideiaOriginalDescricao,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                )
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                TimestampHelper.formatar(projeto.ideiaOriginalTimestamp),
-                                style: theme.textTheme.bodySmall
-                              ),
-                            ]
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - 48,
+                ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: 600,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          projeto.titulo,
+                          style: theme.textTheme.headlineLarge,
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Text('Data de criação: '),
+                            Text(TimestampHelper.formatar(projeto.timestamp)),
+                          ]
+                        ),
+                        const SizedBox(height: 30),
+                        Card(
+                          color: theme.colorScheme.surface,
+                          margin: EdgeInsets.all(0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  projeto.ideiaOriginalTitulo,
+                                  style: theme.textTheme.headlineSmall,
+                                  softWrap: true,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  projeto.ideiaOriginalDescricao,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  )
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  TimestampHelper.formatar(projeto.ideiaOriginalTimestamp),
+                                  style: theme.textTheme.bodySmall
+                                ),
+                              ]
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      CardCampoProjeto(
-                        campos: projeto.camposProjeto,
-                        onCampoAlterado: atualizarCampo,
-                      ),
-                      const SizedBox(height: 50),
-                      Row(
-                        children: [
-                          Icon(
-                            NotificacaoHelper.icone(projeto.notificacao),
-                            color: NotificacaoHelper.cor(projeto.notificacao, theme),
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Notificações',
-                            style: theme.textTheme.titleMedium,
-                          ),
-                          const Spacer(),
-                          DropdownButton<int>(
-                            value: projeto.notificacao,
-                            isDense: true,
-                            underline: const SizedBox.shrink(),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: NotificacaoHelper.cor(
+                        const SizedBox(height: 10),
+                        CardCampoProjeto(
+                          campos: projeto.camposProjeto,
+                          onCampoAlterado: atualizarCampo,
+                        ),
+                        const SizedBox(height: 50),
+                        Row(
+                          children: [
+                            Icon(
+                              NotificacaoHelper.icone(projeto.notificacao),
+                              color: NotificacaoHelper.cor(projeto.notificacao, theme),
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Notificações',
+                              style: theme.textTheme.titleMedium,
+                            ),
+                            const Spacer(),
+                            DropdownButton<int>(
+                              value: projeto.notificacao,
+                              isDense: true,
+                              underline: const SizedBox.shrink(),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: NotificacaoHelper.cor(
+                                  projeto.notificacao,
+                                  theme,
+                                ),
+                              ),
+                              iconEnabledColor: NotificacaoHelper.cor(
                                 projeto.notificacao,
                                 theme,
                               ),
-                            ),
-                            iconEnabledColor: NotificacaoHelper.cor(
-                              projeto.notificacao,
-                              theme,
-                            ),
-                            items: NotificacaoHelper.opcoes(theme),
-                            onChanged: (valor) {
-                              if (valor == null) return;
+                              items: NotificacaoHelper.opcoes(theme),
+                              onChanged: (valor) {
+                                if (valor == null) return;
 
-                              setState(() {
-                                projeto = projeto.copyWith(notificacao: valor);
-                              });
-                            }
-                          ),
-                        ]
-                      ),
-                      const SizedBox(height: 50),
-                      Center(
-                        child: Column(
-                          children: [
-                            FilledButton.icon(
-                              onPressed: editarProjeto,
-                              icon: const Icon(Icons.edit),
-                              label: const Text('Editar'),
+                                setState(() {
+                                  projeto = projeto.copyWith(notificacao: valor);
+                                });
+                              }
                             ),
-                            const SizedBox(height: 8),
-                            TextButton.icon(
-                              onPressed: excluirProjeto,
-                              icon: const Icon(Icons.delete_outline),
-                              label: const Text('Excluir'),
-                              style: TextButton.styleFrom(
-                                foregroundColor: theme.colorScheme.error,
-                              ),
-                            ),
-                          ],
+                          ]
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 50),
+                        Center(
+                          child: Column(
+                            children: [
+                              FilledButton.icon(
+                                onPressed: editarProjeto,
+                                icon: const Icon(Icons.edit),
+                                label: const Text('Editar'),
+                              ),
+                              const SizedBox(height: 8),
+                              TextButton.icon(
+                                onPressed: excluirProjeto,
+                                icon: const Icon(Icons.delete_outline),
+                                label: const Text('Excluir'),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: theme.colorScheme.error,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
-      ),
-
+            );
+          },
+        ),
+      )
     );
   }
 }

@@ -129,6 +129,35 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
     });
   }
 
+  Future<void> salvarAlteracoes() async {
+    final theme = Theme.of(context);
+
+    try {
+      final projetoAtualizado = await ProjetoService.atualizarProjeto(projeto);
+
+      if (!mounted) return;
+
+      Navigator.pop(
+        context,
+        ResultadoRegistroProjeto.atualizado(projetoAtualizado),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: theme.colorScheme.error),
+              SizedBox(width: 10),
+              Text('Não foi possível atualizar o projeto: $e'),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
   Future<void> excluirProjeto() async {
     final theme = Theme.of(context);
 
@@ -414,12 +443,7 @@ class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
                           child: Column(
                             children: [
                               FilledButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(
-                                    context,
-                                    ResultadoRegistroProjeto.atualizado(projeto),
-                                  );
-                                },
+                                onPressed: salvarAlteracoes,
                                 icon: const Icon(Icons.save),
                                 label: const Text('Salvar'),
                               ),
