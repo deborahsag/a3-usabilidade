@@ -1,4 +1,4 @@
-export 'data/campos_projeto.dart';
+export 'data/campo_projeto.dart';
 export 'data/ideia.dart';
 export 'data/projeto.dart';
 export 'screens/criar_ideia.dart';

@@ -1,4 +1,4 @@
-import 'package:a3_usabilidade/data/campos_projeto.dart';
+import 'package:a3_usabilidade/data/campo_projeto.dart';
 import 'package:a3_usabilidade/data/projeto.dart';
 
 class ProjetoService {

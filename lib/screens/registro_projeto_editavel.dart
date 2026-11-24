@@ -17,27 +17,27 @@ class RegistroProjetoEditavel extends StatefulWidget {
 class _RegistroProjetoEditavelState extends State<RegistroProjetoEditavel> {
   late Projeto projeto;
 
-  @override
-  void initState() {
-    super.initState();
+    @override
+    void initState() {
+      super.initState();
 
-    projeto = widget.projeto.copyWith(
-      camposProjeto: widget.projeto.camposProjeto?.map((campo) {
-        return switch (campo) {
-          CampoTexto(:final texto) => CampoTexto(texto: texto),
+      projeto = widget.projeto.copyWith(
+        camposProjeto: widget.projeto.camposProjeto?.map((campo) {
+          return switch (campo) {
+            CampoTexto(:final texto) => CampoTexto(texto: texto),
 
-          CampoLista(:final checklist) => CampoLista(
-            checklist: checklist.map((item) {
-              return ChecklistItem(
-                isChecked: item.isChecked,
-                texto: item.texto,
-              );
-            }).toList(),
-          ),
-        };
-      }).toList(),
-    );
-  }
+            CampoLista(:final checklist) => CampoLista(
+              checklist: checklist.map((item) {
+                return ChecklistItem(
+                  isChecked: item.isChecked,
+                  texto: item.texto,
+                );
+              }).toList(),
+            ),
+          };
+        }).toList(),
+      );
+    }
 
   void adicionarCampoTexto() {
     final campos = List<CampoProjeto>.from(

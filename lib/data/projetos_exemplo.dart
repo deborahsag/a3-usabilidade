@@ -1,5 +1,5 @@
 import 'projeto.dart';
-import 'campos_projeto.dart';
+import 'campo_projeto.dart';
 
 final List<Projeto> projetosExemplo = [
   Projeto(
