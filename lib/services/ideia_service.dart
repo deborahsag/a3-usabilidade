@@ -7,7 +7,7 @@ import '../data/ideia.dart';
 class IdeiaService {
   static const String baseUrl = 'http://127.0.0.1:8000';
 
-  // GET todas as ideias
+  // GET listar todas as ideias
   static Future<List<Ideia>> listarIdeias() async {
     final resposta = await http.get(
       Uri.parse('$baseUrl/ideias'),

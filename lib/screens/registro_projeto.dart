@@ -107,7 +107,18 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
       },
     );
 
-    if (confirmar == true && mounted) {
+    if (confirmar != true || !mounted) return;
+
+    try {
+      await ProjetoService.excluirProjeto(projeto.id);
+
+      if (!mounted) return;
+
+      Navigator.pop(
+        context,
+        const ResultadoRegistroProjeto.excluido(),
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
@@ -117,13 +128,21 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
               Text('Projeto excluído com sucesso.'),
             ],
           ),
-          duration: Duration(seconds: 3),
         ),
       );
-      
-      Navigator.pop(
-        context,
-        const ResultadoRegistroProjeto.excluido(),
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: theme.colorScheme.error),
+              SizedBox(width: 10),
+              Text('Não foi possível excluir o projeto: $e'),
+            ],
+          ),
+        ),
       );
     }
   }

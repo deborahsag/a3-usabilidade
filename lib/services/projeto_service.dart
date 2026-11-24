@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
 
 import '../data/campo_projeto.dart';
 import '../data/projeto.dart';
@@ -54,5 +53,41 @@ class ProjetoService {
     return Projeto.fromJson(
       jsonDecode(resposta.body) as Map<String, dynamic>,
     );
+  }
+
+  //PUT atualizar um projeto
+  static Future<Projeto> atualizarProjeto(Projeto projeto) async {
+    final resposta = await http.put(
+      Uri.parse('$baseUrl/projetos/${projeto.id}'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'titulo': projeto.titulo,
+        'notificacao': projeto.notificacao,
+        'camposProjeto': projeto.camposProjeto
+          ?.map((campo) => campo.toJson())
+          .toList(),
+      }),
+    );
+
+    if (resposta.statusCode != 200) {
+      throw Exception('Erro ao atualizar o projeto: ${resposta.body}');
+    }
+
+    return Projeto.fromJson(
+      jsonDecode(resposta.body) as Map<String, dynamic>,
+    );
+  }
+
+  //DELETE excluir um projeto
+  static Future<void> excluirProjeto(String id) async {
+    final resposta = await http.delete(
+      Uri.parse('$baseUrl/projetos/$id'),
+    );
+
+    if (resposta.statusCode != 200) {
+      throw Exception('Erro ao excluir projeto: ${resposta.body}');
+    }
   }
 }
