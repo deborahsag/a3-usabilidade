@@ -3,8 +3,6 @@ import 'package:material_ui/material_ui.dart';
 
 import 'package:a3_usabilidade/capsula.dart';
 
-//import 'data/ideias_exemplo.dart';
-import 'data/projetos_exemplo.dart';
 
 void main() {
   runApp(const CapsulaApp());
@@ -112,18 +110,20 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
   int currentPageIndex = 0;
 
   List<Ideia> ideias = [];
-  late List<Projeto> projetos;
+  List<Projeto> projetos = [];
 
   bool carregandoIdeias = true;
   String? erroIdeias;
+
+  bool carregandoProjetos = true;
+  String? erroProjetos;
 
   @override
   void initState() {
     super.initState();
 
     _carregarIdeias();
-
-    projetos = List<Projeto>.of(projetosExemplo);
+    _carregarProjetos();
   }
 
   Future<void> _carregarIdeias() async {
@@ -178,6 +178,61 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
       ideias: ideias,
       onIdeiaAtualizada: atualizarIdeia,
       onIdeiaExcluida: excluirIdeia,
+    );
+  }
+
+  Future<void> _carregarProjetos() async {
+    setState(() {
+      carregandoProjetos = true;
+      erroProjetos = null;
+    });
+
+    try {
+      final projetosCarregados = await ProjetoService.listarProjetos();
+
+      if (!mounted) return;
+
+      setState(() {
+        projetos = projetosCarregados;
+        carregandoProjetos = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        erroProjetos = e.toString();
+        carregandoProjetos = false;
+      });
+    }
+  }
+
+  Widget _construirHistoricoProjetos() {
+    if (carregandoProjetos) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (erroProjetos != null) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Não foi possível carregar os projetos.'),
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: _carregarProjetos,
+              child: const Text('Tentar novamente'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return HistoricoProjetos(
+      projetos: projetos,
+      onProjetoAtualizado: atualizarProjeto,
+      onProjetoExcluido: excluirProjeto,
     );
   }
 
@@ -316,11 +371,7 @@ class _LayoutPrincipalState extends State<LayoutPrincipal> {
         _construirHistoricoIdeias(),
         
         /// Histórico de Projetos
-        HistoricoProjetos(
-          projetos: projetos,
-          onProjetoAtualizado: atualizarProjeto,
-          onProjetoExcluido: excluirProjeto,
-        ),
+        _construirHistoricoProjetos(),
       ][currentPageIndex],
     );
   }

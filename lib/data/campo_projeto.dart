@@ -9,6 +9,20 @@ sealed class CampoProjeto {
   });
   
   final TipoCampoProjeto tipo;
+
+  factory CampoProjeto.fromJson(Map<String, dynamic> json) {
+    return switch (json['tipo']) {
+      'texto' => CampoTexto(
+        texto: json['texto'],
+      ),
+      'lista' => CampoLista(
+        checklist: (json['checklist'] as List<dynamic>)
+          .map((item) => ChecklistItem.fromJson(item))
+          .toList(),
+      ),
+      _ => throw FormatException('Tipo de campo desconhecido.'),
+    };
+  }
 }
 
 class CampoTexto extends CampoProjeto {
@@ -27,6 +41,13 @@ class ChecklistItem {
 
   bool isChecked;
   final String texto;
+
+  factory ChecklistItem.fromJson(Map<String, dynamic> json) {
+    return ChecklistItem(
+      isChecked: json['isChecked'] as bool, 
+      texto: json['texto'] as String,
+    );
+  }
 }
 
 class CampoLista extends CampoProjeto {

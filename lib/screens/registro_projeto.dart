@@ -180,20 +180,12 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                         child: Padding(
                           padding: const EdgeInsets.all(20),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Row(
-                                children: [
-                                  /*Text(
-                                    'Ideia original: ',
-                                    style: theme.textTheme.bodyLarge,
-                                  ),*/
-                                  Text(
-                                    projeto.ideiaOriginalTitulo,
-                                    style: theme.textTheme.headlineSmall,
-                                    softWrap: true,
-                                  ),
-                                ]
+                              Text(
+                                projeto.ideiaOriginalTitulo,
+                                style: theme.textTheme.headlineSmall,
+                                softWrap: true,
                               ),
                               const SizedBox(height: 10),
                               Text(
@@ -204,7 +196,7 @@ class _RegistroProjetoState extends State<RegistroProjeto> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                TimestampHelper.formatar(projeto.timestamp),
+                                TimestampHelper.formatar(projeto.ideiaOriginalTimestamp),
                                 style: theme.textTheme.bodySmall
                               ),
                             ]

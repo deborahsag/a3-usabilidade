@@ -29,6 +29,23 @@ class Projeto {
   // Campos projeto
   final List<CampoProjeto>? camposProjeto;
 
+  factory Projeto.fromJson(Map<String,dynamic> json) {
+    return Projeto(
+      id: json['id'] as String,
+      titulo: json['titulo'] as String,
+      notificacao: json['notificacao'] as int,
+      timestamp: json['timestamp'] as String,
+      arquivado: json['arquivado'] as bool,
+      ideiaOriginalId: json['ideiaOriginalId'] as String,
+      ideiaOriginalTitulo: json['ideiaOriginalTitulo'] as String,
+      ideiaOriginalDescricao: json['ideiaOriginalDescricao'] as String,
+      ideiaOriginalTimestamp: json['ideiaOriginalTimestamp'] as String,
+      camposProjeto: (json['camposProjeto'] as List<dynamic>?)
+        ?.map((item) => CampoProjeto.fromJson(item))
+        .toList(),
+    );
+  }
+
   Projeto copyWith({
     String? titulo,
     int? notificacao,
